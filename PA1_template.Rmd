@@ -8,18 +8,50 @@ output:
 
 ## Loading and preprocessing the data
 
+library(ggplot2)
+library(dplyr)
+library(chron)
 
+activity <- read.csv("activity.csv")
+activity
+
+str(activity)
 
 ## What is mean total number of steps taken per day?
 
-
+mean(Step$Steps, na.rm=TRUE)
 
 ## What is the average daily activity pattern?
+
+
+Stepsperday <- aggregate(steps~interval,data=activity,FUN=mean,na.action=na.omit)
+
+Stepsperday$time <- StepsPerTime$interval/100
+
+h <- ggplot(Stepsperday, aes(time, steps))
+
+h+geom_line(col="black")+ggtitle("Average steps per time interval")
++xlab("Time")+ylab("Steps")+theme(plot.title = element_text(face="bold", size=12))
 
 
 
 ## Imputing missing values
 
 
+missings <- tbl_df(activity)
+missings %>% filter(is.na(steps)) %>% summarize(missing_values = n())
+
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+StepsPerTimeDT <- aggregate(steps~interval,data=activity,FUN=mean,na.action=na.omit)
+
+StepsPerTimeDT$time <- StepsPerTime$interval/100
+
+j <- ggplot(StepsPerTimeDT, aes(time, steps))
+j+geom_line(col="darkred")+ggtitle("Average steps per time interval: weekdays vs. weekends")+xlab("Time")+ylab("Steps")+theme(plot.title = element_text(face="bold", size=12))
+
+
+
+
+
